@@ -1,5 +1,5 @@
-const { exec } = require('child_process');
-const xml2js = require('xml2js');
+const { exec } = require("child_process");
+const xml2js = require("xml2js");
 
 const executeShellCommand = (command) => {
   return new Promise((resolve, reject) => {
@@ -15,8 +15,10 @@ const executeShellCommand = (command) => {
 };
 
 const fetchSitemap = async (url) => {
+  console.log(url);
   try {
     const curlCommand = `curl -L "${url}"`; // -L to follow redirects if any
+    console.log(curlCommand);
     const response = await executeShellCommand(curlCommand);
     const parsedResult = await xml2js.parseStringPromise(response);
 
@@ -26,18 +28,20 @@ const fetchSitemap = async (url) => {
         const sitemapUrls = await fetchSitemap(sitemap.loc[0]);
         allUrls = allUrls.concat(sitemapUrls);
       }
+      console.log(allUrls);
       return allUrls;
     }
 
     if (parsedResult.urlset) {
       const url = parsedResult.urlset.url.map((urlObject) => urlObject.loc[0]);
+      console.log(url);
       return url;
     }
 
-    console.warn('Unrecognized sitemap format detected.');
+    console.warn("Unrecognized sitemap format detected.");
     return [];
   } catch (error) {
-    console.error('Error fetching sitemap:', error);
+    console.error("Error fetching sitemap:", error);
     throw error;
   }
 };
