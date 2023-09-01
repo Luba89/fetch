@@ -29,6 +29,8 @@ const getSitemapsForCustomerID = async (customer) => {
     customer.CustomerID,
     customer.origin
   );
+  console.log(customer.CustomerID, customer.origin);
+  console.log(origins);
   for (let originData of origins.data) {
     if (originData.origin === customer.origin) {
       // Create full URLs for sitemaps
